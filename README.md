@@ -1,0 +1,4 @@
+doxymax
+=======
+
+Doxygen macros
