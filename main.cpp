@@ -38,7 +38,7 @@ class DoxyTok:public Herbs::Tokenizer::CharClassifier
 					case CHAR('\''):
 						char_literal=0;
 						moveNext(delimiter);
-						return CHARLIT_TOGGLE;
+						return Herbs::Tokenizer::NO_DELIMITER;
 					default:
 						moveNext(delimiter);
 						return Herbs::Tokenizer::NO_DELIMITER;
@@ -56,7 +56,7 @@ class DoxyTok:public Herbs::Tokenizer::CharClassifier
 					case CHAR('"'):
 						in_string=0;
 						moveNext(delimiter);
-						return STRING_TOGGLE;
+						return Herbs::Tokenizer::NO_DELIMITER;
 					default:
 						moveNext(delimiter);
 						return Herbs::Tokenizer::NO_DELIMITER;
@@ -86,11 +86,11 @@ class DoxyTok:public Herbs::Tokenizer::CharClassifier
 				case CHAR('\''):
 					char_literal=!char_literal;
 					moveNext(delimiter);
-					return CHARLIT_TOGGLE;
+					return Herbs::Tokenizer::NO_DELIMITER;
 				case CHAR('"'):
 					in_string=!in_string;
 					moveNext(delimiter);
-					return STRING_TOGGLE;
+					return Herbs::Tokenizer::NO_DELIMITER;
 				case CHAR('\n'):
 					moveNext(delimiter);
 					return NEWLINE;
@@ -136,6 +136,9 @@ class DoxyTok:public Herbs::Tokenizer::CharClassifier
 		static const
 		Herbs::Tokenizer::tokclass_t CHARLIT_TOGGLE=Herbs::Tokenizer::RESERVED_MAX+9;
 		
+		bool inString() const
+			{return in_string;}
+		
 	private:
 		void moveNext(char_t delimiter)
 			{
@@ -161,14 +164,77 @@ Herbs::Stringbase<char> toUTF8(const char_t* str)
 	return ret;
 	}
 
-class ParseMode
+class TokenProcessor
 	{
 	public:
 		virtual void process(const Herbs::Tokenizer::TokenInfo& tokinfo)=0;
 	};
 
-/**The"main" function. $label(name)
-*/
+class CodeProcessor:public TokenProcessor
+	{
+	public:
+		void process(const Herbs::Tokenizer::TokenInfo& info)
+			{
+			printf("%s%c",toUTF8(info.buffer).begin(),info.delimiter);
+			}
+	};
+	
+class CommentProcessor:public TokenProcessor
+	{
+	public:
+		CommentProcessor():class_prev(Herbs::Tokenizer::NO_DELIMITER),is_string(0)
+			{}
+			
+		void process(const Herbs::Tokenizer::TokenInfo& info)
+			{
+			switch(info.tok_class)
+				{					
+				case DoxyTok::ARG_BEGIN:
+					if(*info.buffer==CHAR('$'))
+						{name=Herbs::String(info.buffer+1);}
+					else
+						{printf("%s%c",toUTF8(info.buffer).begin(),info.delimiter);}
+					break;
+				
+				case DoxyTok::ARG_DELIM:
+					if(name.length())
+						{args.append(Herbs::String(info.buffer));}
+					else
+						{printf("%s%c",toUTF8(info.buffer).begin(),info.delimiter);}
+					break;
+				
+				case DoxyTok::ARG_END:
+					if(name.length())
+						{
+						args.append(Herbs::String(info.buffer));
+							{
+							Herbs::String* ptr=args.begin();
+							printf("%s: ",toUTF8(name.begin()).begin());
+							while(ptr!=args.end())
+								{
+								printf("%s ",toUTF8(ptr->begin()).begin());
+								++ptr;
+								}
+							}
+						name.clear();
+						}
+					else
+						{printf("%s%c",toUTF8(info.buffer).begin(),info.delimiter);}
+					break;
+					
+				default:
+					printf("%s%c",toUTF8(info.buffer).begin(),info.delimiter);
+				}
+			}
+
+	private:
+	
+		Herbs::String name;
+		Herbs::Array<Herbs::String> args;
+		Herbs::Tokenizer::tokclass_t class_prev;
+		bool is_string;
+	};
+
 int MAIN(int argc,charsys_t* argv[])
 	{
 	Herbs::MessagePrinterStdio errlog(Herbs::StreamSpec::STDERR);
@@ -184,47 +250,27 @@ int MAIN(int argc,charsys_t* argv[])
 		Herbs::Tokenizer tok(decoder,classifier,16,CHAR('\0'));
 		const Herbs::Tokenizer::TokenInfo& info=tok.infoGet();
 		
-		bool in_comment=0;
-		bool in_string=0;
+		CommentProcessor comment;
+		CodeProcessor code;
+		TokenProcessor* processor_current=&code;
 
 		while(tok.tokenGet())
 			{
 			switch(info.tok_class)
 				{
-				case DoxyTok::STRING_TOGGLE:
-					in_string=!in_string;
-					if(!in_comment)
-						{
-						printf("[%s]",toUTF8(info.buffer).begin());
-						putchar(info.delimiter);
-						}
-				//	fputs(toUTF8(info.buffer).begin(),stdout);
-				//	putchar(info.delimiter);
-					break;
 				case DoxyTok::BLOCK_BEGIN:
-					if(!in_string)
-						{in_comment=1;}
-					fputs("/**",stdout);
+					processor_current->process(info);
+					if(!classifier.inString())
+						{processor_current=&comment;}
 					break;
 				case DoxyTok::BLOCK_END:
-					if(!in_string)
-						{in_comment=0;}
-					fputs("*/",stdout);
+					processor_current->process(info);
+					if(!classifier.inString())
+						{processor_current=&code;}
+				//	fputs("*/",stdout);
 					break;
 				default:
-					if(in_comment)
-						{
-						if(*info.buffer || info.delimiter==CHAR('\n'))
-							{
-							printf("[%s]",toUTF8(info.buffer).begin());
-							putchar(info.delimiter);
-							}
-						}
-					else
-						{
-						printf("[%s]",toUTF8(info.buffer).begin());
-						putchar(info.delimiter);
-						}
+					processor_current->process(info);
 				}
 			}
 		}
