@@ -12,8 +12,6 @@ target[name[doxymax.exe] type[application]]
 #include <herbs/messageprinterstdio.h>
 #include <cstdio>
 
-const char* bajs="nullptr\\\"";
-
 class DoxyTok:public Herbs::Tokenizer::CharClassifier
 	{
 	public:
