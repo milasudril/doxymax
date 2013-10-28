@@ -16,6 +16,10 @@ target[name[doxymax.exe] type[application]]
 
 #include "figure.h"
 #include "ref.h"
+#include "tablebegin.h"
+#include "tableend.h"
+#include "tableheader.h"
+#include "tablerow.h"
 
 int MAIN(int argc,charsys_t* argv[])
 	{
@@ -34,8 +38,17 @@ int MAIN(int argc,charsys_t* argv[])
 		Doxymax::CommentProcessor comment(classifier,src.nameGet());
 		Doxymax::Figure figure;
 		Doxymax::Ref ref;
+		Doxymax::TableBegin table_begin;
+		Doxymax::TableEnd table_end;
+		Doxymax::TableHeader table_header;
+		Doxymax::TableRow table_row;
+		
 		comment.expanderRegister(STR("figure"),figure);
 		comment.expanderRegister(STR("ref"),ref);
+		comment.expanderRegister(STR("table_begin"),table_begin);
+		comment.expanderRegister(STR("table_end"),table_end);
+		comment.expanderRegister(STR("table_header"),table_header);
+		comment.expanderRegister(STR("table_row"),table_row);
 		
 		Doxymax::CodeProcessor code;
 		Doxymax::TokenProcessor* processor_current=&code;
