@@ -14,6 +14,9 @@ target[name[doxymax.exe] type[application]]
 #include "codeprocessor.h"
 #include "commentprocessor.h"
 
+#include "figure.h"
+#include "ref.h"
+
 int MAIN(int argc,charsys_t* argv[])
 	{
 	Herbs::MessagePrinterStdio errlog(Herbs::StreamSpec::STDERR);
@@ -27,11 +30,16 @@ int MAIN(int argc,charsys_t* argv[])
 		Doxymax::DoxyTok classifier;
 		Herbs::Tokenizer tok(decoder,classifier,16,CHAR('\0'));
 		const Herbs::Tokenizer::TokenInfo& info=tok.infoGet();
+				
+		Doxymax::CommentProcessor comment(classifier,src.nameGet());
+		Doxymax::Figure figure;
+		Doxymax::Ref ref;
+		comment.expanderRegister(STR("figure"),figure);
+		comment.expanderRegister(STR("ref"),ref);
 		
-		Doxymax::CommentProcessor comment(classifier);
 		Doxymax::CodeProcessor code;
 		Doxymax::TokenProcessor* processor_current=&code;
-
+		
 		while (tok.tokenGet())
 			{
 			switch(info.tok_class)
