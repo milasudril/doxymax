@@ -10,12 +10,16 @@ target[name[doxymax.exe] type[application]]
 #include <herbs/textconverter.h>
 #include <herbs/exception.h>
 #include <herbs/messageprinterstdio.h>
+#include <herbs/exceptionmissing.h>
+
+//Currently, Herbs lacks support for standard stream I/O. Therefore, 
 #include <cstdio>
 
 class DoxyTok:public Herbs::Tokenizer::CharClassifier
 	{
 	public:
-		DoxyTok():ch_buff{0,0},char_literal(0),in_string(0),escape_next(0)
+		DoxyTok():whitespace_eat(0),ch_buff{0,0},char_literal(0)	
+		,in_string(0),escape_next(0)
 			{}
 			
 		Herbs::Tokenizer::tokclass_t charClassify(char_t delimiter)
@@ -52,7 +56,7 @@ class DoxyTok:public Herbs::Tokenizer::CharClassifier
 					case CHAR('\\'):
 						escape_next=1;
 						moveNext(delimiter);
-						return  Herbs::Tokenizer::NO_DELIMITER;
+						return Herbs::Tokenizer::NO_DELIMITER;
 					case CHAR('"'):
 						in_string=0;
 						moveNext(delimiter);
@@ -78,7 +82,10 @@ class DoxyTok:public Herbs::Tokenizer::CharClassifier
 			if(delimiter>=CHAR('\0') && delimiter<=CHAR(' ') && delimiter!=CHAR('\n'))
 				{
 				moveNext(delimiter);
-				return SPACE;
+				if(whitespace_eat)
+					{return Herbs::Tokenizer::SKIP;}
+				else
+					{return SPACE;}
 				}
 	
 			switch(delimiter)
@@ -108,6 +115,15 @@ class DoxyTok:public Herbs::Tokenizer::CharClassifier
 					return Herbs::Tokenizer::NO_DELIMITER;
 				}
 			}
+			
+		bool inString() const
+			{return in_string;}
+			
+		void whitespaceEatInc()
+			{++whitespace_eat;}
+			
+		void whitespaceEatDec()
+			{--whitespace_eat;}
 		
 		static const
 		Herbs::Tokenizer::tokclass_t SPACE=Herbs::Tokenizer::RESERVED_MAX+1;
@@ -136,16 +152,15 @@ class DoxyTok:public Herbs::Tokenizer::CharClassifier
 		static const
 		Herbs::Tokenizer::tokclass_t CHARLIT_TOGGLE=Herbs::Tokenizer::RESERVED_MAX+9;
 		
-		bool inString() const
-			{return in_string;}
-		
+	
 	private:
 		void moveNext(char_t delimiter)
 			{
 			ch_buff[0]=ch_buff[1];
 			ch_buff[1]=delimiter;
 			}
-	
+
+		size_t whitespace_eat;
 		char_t ch_buff[2];
 		bool char_literal;
 		bool in_string;
@@ -182,56 +197,52 @@ class CodeProcessor:public TokenProcessor
 class CommentProcessor:public TokenProcessor
 	{
 	public:
-		CommentProcessor():class_prev(Herbs::Tokenizer::NO_DELIMITER),is_string(0)
+		CommentProcessor(DoxyTok& classifier):m_classifier(classifier)
+		,is_string(0)
 			{}
 			
 		void process(const Herbs::Tokenizer::TokenInfo& info)
 			{
-			switch(info.tok_class)
-				{					
-				case DoxyTok::ARG_BEGIN:
-					if(*info.buffer==CHAR('$'))
-						{name=Herbs::String(info.buffer+1);}
-					else
-						{printf("%s%c",toUTF8(info.buffer).begin(),info.delimiter);}
-					break;
-				
-				case DoxyTok::ARG_DELIM:
-					if(name.length())
-						{args.append(Herbs::String(info.buffer));}
-					else
-						{printf("%s%c",toUTF8(info.buffer).begin(),info.delimiter);}
-					break;
-				
-				case DoxyTok::ARG_END:
-					if(name.length())
-						{
-						args.append(Herbs::String(info.buffer));
-							{
-							Herbs::String* ptr=args.begin();
-							printf("%s: ",toUTF8(name.begin()).begin());
-							while(ptr!=args.end())
-								{
-								printf("%s ",toUTF8(ptr->begin()).begin());
-								++ptr;
-								}
-							}
-						name.clear();
-						}
-					else
-						{printf("%s%c",toUTF8(info.buffer).begin(),info.delimiter);}
-					break;
-					
-				default:
-					printf("%s%c",toUTF8(info.buffer).begin(),info.delimiter);
+			if(info.tok_class==DoxyTok::ARG_BEGIN)
+				{
+				if(*info.buffer==CHAR('$'))
+					{
+					name=Herbs::String(info.buffer+1);
+					m_classifier.whitespaceEatInc();
+					}
+				else
+					{printf("%s%c",toUTF8(info.buffer).begin(),info.delimiter);}
+				return;
 				}
+				
+			if(name.length())
+				{
+				switch(info.tok_class)
+					{
+					case DoxyTok::ARG_BEGIN:
+						throw Herbs::ExceptionMissing(___FILE__,__LINE__);
+					case DoxyTok::ARG_DELIM:
+						printf("arg[%s]",toUTF8(info.buffer).begin());
+						args.append(Herbs::String(info.buffer));
+						return;
+					case DoxyTok::ARG_END:
+						printf("arg[%s]",toUTF8(info.buffer).begin());
+						args.append(Herbs::String(info.buffer));
+						name.clear();
+						m_classifier.whitespaceEatDec();
+						return;
+					default:
+						throw Herbs::ExceptionMissing(___FILE__,__LINE__);
+					}
+				}
+			else
+				{printf("%s%c",toUTF8(info.buffer).begin(),info.delimiter);}
 			}
 
 	private:
-	
+		DoxyTok& m_classifier;
 		Herbs::String name;
 		Herbs::Array<Herbs::String> args;
-		Herbs::Tokenizer::tokclass_t class_prev;
 		bool is_string;
 	};
 
@@ -250,11 +261,11 @@ int MAIN(int argc,charsys_t* argv[])
 		Herbs::Tokenizer tok(decoder,classifier,16,CHAR('\0'));
 		const Herbs::Tokenizer::TokenInfo& info=tok.infoGet();
 		
-		CommentProcessor comment;
+		CommentProcessor comment(classifier);
 		CodeProcessor code;
 		TokenProcessor* processor_current=&code;
 
-		while(tok.tokenGet())
+		while (tok.tokenGet())
 			{
 			switch(info.tok_class)
 				{
@@ -267,7 +278,6 @@ int MAIN(int argc,charsys_t* argv[])
 					processor_current->process(info);
 					if(!classifier.inString())
 						{processor_current=&code;}
-				//	fputs("*/",stdout);
 					break;
 				default:
 					processor_current->process(info);
@@ -277,6 +287,7 @@ int MAIN(int argc,charsys_t* argv[])
 	catch(Herbs::Exception& err)
 		{
 		err.print(errlog);
+		return -1;
 		}
 	
 	return 0;
