@@ -104,6 +104,20 @@ namespace
 			}
 		return ret;
 		}
+		
+	
+	Herbs::String quoteKill(const Herbs::String& str)
+		{
+		Herbs::String ret(str.length());
+		const char_t* ptr_begin=str.begin();
+		while(ptr_begin!=str.end())
+			{
+			if(*ptr_begin!=CHAR('"'))
+				{ret.append(*ptr_begin);}
+			++ptr_begin;
+			}
+		return ret;
+		}
 	}
 
 
@@ -149,11 +163,13 @@ void Doxymax::CommentProcessor::process(const Herbs::Tokenizer::TokenInfo& info)
 			{
 			case DoxyTok::ARG_BEGIN:
 				throw Herbs::ExceptionMissing(___FILE__,__LINE__);
+				
 			case DoxyTok::ARG_DELIM:
-				macro_current.args.append(Herbs::String(info.buffer));
+				macro_current.args.append(quoteKill(Herbs::String(info.buffer)));
 				return;
+				
 			case DoxyTok::ARG_END:
-				macro_current.args.append(Herbs::String(info.buffer));
+				macro_current.args.append(quoteKill(Herbs::String(info.buffer)));
 					{
 					auto i=expanders.find(macro_current.name);
 					if(i!=expanders.end())
@@ -165,6 +181,7 @@ void Doxymax::CommentProcessor::process(const Herbs::Tokenizer::TokenInfo& info)
 				macro_current.args.clear();
 				m_classifier.whitespaceEatDec();
 				return;
+	
 			default:
 				throw Herbs::ExceptionMissing(___FILE__,__LINE__);
 			}

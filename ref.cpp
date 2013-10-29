@@ -10,22 +10,6 @@ target[name[ref.o] type[object]]
 #include <herbs/intformat.h>
 #include <herbs/exceptionmissing.h>
 
-namespace
-	{
-	Herbs::String quoteKill(const Herbs::String& str)
-		{
-		Herbs::String ret(str.length());
-		const char_t* ptr_begin=str.begin();
-		while(ptr_begin!=str.end())
-			{
-			if(*ptr_begin!=CHAR('"'))
-				{ret.append(*ptr_begin);}
-			++ptr_begin;
-			}
-		return ret;
-		}
-	}
-
 void Doxymax::Ref::expand(const Macro& macro,CommentProcessor& processor)
 	{
 	if(macro.args.length()<1)
