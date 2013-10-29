@@ -1,5 +1,8 @@
 #ifdef __WAND__
-target[name[doxymax.exe] type[application]]
+target[name[doxymax.exe] type[application] platform[win32]]
+#endif
+#ifdef __WAND__
+target[name[doxymax] type[application]]
 #endif
 
 #include <herbs/main.h>
