@@ -5,7 +5,7 @@ target[name[tokenprocessor.h]type[include]]
 #ifndef TOKENPROCESSOR_H
 #define TOKENPROCESSOR_H
 
-#include <herbs/tokenizer.h>
+#include <herbs/tokenizer/tokenizer.h>
 
 namespace Doxymax
 	{

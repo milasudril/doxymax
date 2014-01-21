@@ -6,8 +6,8 @@ target[name[tablerow.o] type[object]]
 #include "output.h"
 #include "macro.h"
 
-#include <herbs/intformat.h>
-#include <herbs/exceptionmissing.h>
+#include <herbs/intformat/intformat.h>
+#include <herbs/exceptionmissing/exceptionmissing.h>
 
 void Doxymax::TableRow::expand(const Macro& macro,CommentProcessor& processor)
 	{

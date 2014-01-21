@@ -7,8 +7,8 @@ target[name[figure.o] type[object]]
 #include "macro.h"
 #include "commentprocessor.h"
 
-#include <herbs/intformat.h>
-#include <herbs/exceptionmissing.h>
+#include <herbs/intformat/intformat.h>
+#include <herbs/exceptionmissing/exceptionmissing.h>
 
 
 void Doxymax::Figure::expand(const Macro& macro,CommentProcessor& processor)

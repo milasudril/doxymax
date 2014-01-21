@@ -1,12 +1,12 @@
 #ifdef __WAND__
-dependencies[output.o]
+dependency[output.o]
 target[name[output.h] type[include]]
 #endif
 
 #ifndef OUTPUT_H
 #define OUTPUT_H
 
-#include <herbs/chartype.h>
+#include <herbs/chartype/chartype.h>
 
 namespace Herbs
 	{

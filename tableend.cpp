@@ -4,7 +4,7 @@ target[name[tableend.o] type[object]]
 
 #include "tableend.h"
 #include "output.h"
-#include <herbs/string.h>
+#include <herbs/string/string.h>
 
 void Doxymax::TableEnd::expand(const Macro& macro,CommentProcessor& processor)
 	{

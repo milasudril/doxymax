@@ -5,7 +5,7 @@ target[name[macro.h] type[include]]
 #ifndef MACRO_H
 #define MACRO_H
 
-#include <herbs/string.h>
+#include <herbs/string/string.h>
 
 namespace Doxymax
 	{

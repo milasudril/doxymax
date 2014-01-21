@@ -1,5 +1,5 @@
 #ifdef __WAND__
-dependencies[commentprocessor.o]
+dependency[commentprocessor.o]
 target[name[commentprocessor.h]type[include]]
 #endif
 

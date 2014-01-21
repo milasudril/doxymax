@@ -1,5 +1,5 @@
 #ifdef __WAND__
-dependencies[ref.o]
+dependency[ref.o]
 target[name[ref.h] type[include]]
 #endif
 

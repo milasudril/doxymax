@@ -1,5 +1,5 @@
 #ifdef __WAND__
-dependencies[tableend.o]
+dependency[tableend.o]
 target[name[tableend.h] type[include]]
 #endif
 

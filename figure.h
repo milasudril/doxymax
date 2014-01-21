@@ -1,5 +1,5 @@
 #ifdef __WAND__
-dependencies[figure.o]
+dependency[figure.o]
 target[name[figure.h] type[include]]
 #endif
 

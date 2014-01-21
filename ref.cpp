@@ -7,8 +7,8 @@ target[name[ref.o] type[object]]
 #include "macro.h"
 #include "commentprocessor.h"
 
-#include <herbs/intformat.h>
-#include <herbs/exceptionmissing.h>
+#include <herbs/intformat/intformat.h>
+#include <herbs/exceptionmissing/exceptionmissing.h>
 
 void Doxymax::Ref::expand(const Macro& macro,CommentProcessor& processor)
 	{

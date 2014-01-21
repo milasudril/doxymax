@@ -1,12 +1,12 @@
 #ifdef __WAND__
-dependencies[doxytok.o]
+dependency[doxytok.o]
 target[name[doxytok.h] type[include]]
 #endif
 
 #ifndef DOXYTOK_H
 #define DOXYTOK_H
 
-#include <herbs/tokenizer.h>
+#include <herbs/tokenizer/tokenizer.h>
 
 namespace Doxymax
 	{

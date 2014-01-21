@@ -7,10 +7,10 @@ target[name[commentprocessor.o] type[object]]
 #include "output.h"
 #include "expander.h"
 
-#include <herbs/exceptionmissing.h>
-#include <herbs/filein.h>
-#include <herbs/fileout.h>
-#include <herbs/fileutils.h>
+#include <herbs/exceptionmissing/exceptionmissing.h>
+#include <herbs/filein/filein.h>
+#include <herbs/fileout/fileout.h>
+#include <herbs/fileutils/fileutils.h>
 
 namespace
 	{

@@ -1,17 +1,7 @@
 #ifdef __WAND__
-target[name[doxymax.exe] type[application] platform[win32]]
-#endif
-#ifdef __WAND__
+target[name[doxymax.exe] type[application] platform[;Windows]]
 target[name[doxymax] type[application]]
 #endif
-
-#include <herbs/main.h>
-#include <herbs/filein.h>
-#include <herbs/tokenizer.h>
-#include <herbs/textdecoder.h>
-#include <herbs/exception.h>
-#include <herbs/messageprinterstdio.h>
-#include <herbs/stringsys.h>
 
 #include "doxytok.h"
 #include "codeprocessor.h"
@@ -23,6 +13,14 @@ target[name[doxymax] type[application]]
 #include "tableend.h"
 #include "tableheader.h"
 #include "tablerow.h"
+
+#include <herbs/main/main.h>
+#include <herbs/filein/filein.h>
+#include <herbs/tokenizer/tokenizer.h>
+#include <herbs/textdecoder/textdecoder.h>
+#include <herbs/exception/exception.h>
+#include <herbs/messageprinterstdio/messageprinterstdio.h>
+#include <herbs/stringsys/stringsys.h>
 
 int MAIN(int argc,charsys_t* argv[])
 	{

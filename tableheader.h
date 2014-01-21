@@ -1,5 +1,5 @@
 #ifdef __WAND__
-dependencies[tableheader.o]
+dependency[tableheader.o]
 target[name[tableheader.h] type[include]]
 #endif
 

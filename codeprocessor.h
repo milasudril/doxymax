@@ -1,5 +1,5 @@
 #ifdef __WAND__
-dependencies[codeprocessor.o]
+dependency[codeprocessor.o]
 target[name[codeprocessor.h]type[include]]
 #endif
 
