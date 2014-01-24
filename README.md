@@ -62,6 +62,18 @@ This section lists all currently implemented macros. Arguments inside ´[´ and ´]
 
 	$table_end()
 	
+### term_def &mdash; Defines a new term
+	
+	$term_def(name,name showed, description)
+	
+### term_ref &mdash; Referrs to a defined term
+
+	$term_ref(name, name showed)
+	
+### term_list &mdash; Generates a list of all terms
+
+	$term_list()
+	
 Notes
 ------------
 

@@ -28,6 +28,17 @@ namespace Doxymax
 			size_t labelGet(const Herbs::String& label);
 			void counterSet(const char_t* name,size_t value);
 			size_t counterGet(const char_t* name);
+			
+			const Herbs::String* definitionGet(const Herbs::String& term) const;
+			void definitionSet(const Herbs::String& term,const Herbs::String& def);
+			
+			class DefsEnumCallback
+				{
+				public:
+					virtual bool operator()(const Herbs::String& term
+						,const Herbs::String& def)=0;
+				};			
+			bool definitionsEnum(DefsEnumCallback& defenum) const;
 
 			void expanderRegister(const char_t* name,Expander& expander);
 			
@@ -38,7 +49,9 @@ namespace Doxymax
 			
 			std::map<Herbs::String,size_t> counters;
 			std::map<Herbs::String,size_t> labels;
+			std::map<Herbs::String,Herbs::String> terms;
 			std::map<Herbs::String,Expander*> expanders;
+			
 			
 			Macro macro_current;
 		};

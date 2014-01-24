@@ -52,6 +52,26 @@ namespace
 			}
 		return 1;
 		}
+	
+	bool load(Herbs::StreamIn& source
+		,std::map<Herbs::String,Herbs::String>& map)
+		{
+		size_t count;
+		if(!load(source,count))
+			{return 0;}
+		while(count)
+			{
+			Herbs::String key;
+			if(!load(source,key))
+				{return 0;}
+			Herbs::String value;
+			if(!load(source,value))
+				{return 0;}
+			map[key]=value;
+			--count;
+			}
+		return 1;
+		}
 		
 	bool store(size_t x,Herbs::StreamOut& dest)
 		{
@@ -71,6 +91,24 @@ namespace
 		}
 		
 	bool store(const std::map<Herbs::String,size_t>& map,Herbs::StreamOut& dest)
+		{
+		if(!store(map.size(),dest))
+			{return 0;}
+		
+		auto i=map.begin();
+		while(i!=map.end())
+			{
+			if(!store(i->first,dest))
+				{return 0;}
+			if(!store(i->second,dest))
+				{return 0;}
+			++i;
+			}
+		return 1;
+		}
+	
+	bool store(const std::map<Herbs::String,Herbs::String>& map
+		,Herbs::StreamOut& dest)
 		{
 		if(!store(map.size(),dest))
 			{return 0;}
@@ -132,6 +170,8 @@ Doxymax::CommentProcessor::CommentProcessor(DoxyTok& classifier
 		{return;}
 	if(!load(auxfile,labels))
 		{return;}
+	if(!load(auxfile,terms))
+		{return;}
 	}
 	
 Doxymax::CommentProcessor::~CommentProcessor()
@@ -139,6 +179,7 @@ Doxymax::CommentProcessor::~CommentProcessor()
 	Herbs::FileOut auxfile(Herbs::Path(STR("auxfile.dat")));
 	store(counters,auxfile);
 	store(labels,auxfile);
+	store(terms,auxfile);
 	}
 
 void Doxymax::CommentProcessor::process(const Herbs::Tokenizer::TokenInfo& info)
@@ -215,3 +256,27 @@ void Doxymax::CommentProcessor::expanderRegister(const char_t* name,Expander& ex
 	expanders[Herbs::String(name)]=&expander;
 	}
 
+const Herbs::String* Doxymax::CommentProcessor::definitionGet(const Herbs::String& term) const
+	{
+	auto i=terms.find(term);
+	if(i==terms.end())
+		{return nullptr;}
+	return &i->second;
+	}
+
+void Doxymax::CommentProcessor::definitionSet(const Herbs::String& term,const Herbs::String& def)
+	{
+	terms[term]=def;
+	}
+
+bool Doxymax::CommentProcessor::definitionsEnum(DefsEnumCallback& defenum) const
+	{
+	auto i=terms.begin();
+	while(i!=terms.end())
+		{
+		if(!defenum(i->first,i->second))
+			{return 0;}
+		++i;
+		}
+	return 1;
+	}

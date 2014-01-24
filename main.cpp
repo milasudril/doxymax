@@ -13,6 +13,9 @@ target[name[doxymax] type[application]]
 #include "tableend.h"
 #include "tableheader.h"
 #include "tablerow.h"
+#include "termref.h"
+#include "termdef.h"
+#include "termlist.h"
 
 #include <herbs/main/main.h>
 #include <herbs/filein/filein.h>
@@ -43,6 +46,9 @@ int MAIN(int argc,charsys_t* argv[])
 		Doxymax::TableEnd table_end;
 		Doxymax::TableHeader table_header;
 		Doxymax::TableRow table_row;
+		Doxymax::TermRef term_ref;
+		Doxymax::TermDef term_def;
+		Doxymax::TermList term_list;
 		
 		comment.expanderRegister(STR("figure"),figure);
 		comment.expanderRegister(STR("ref"),ref);
@@ -50,6 +56,9 @@ int MAIN(int argc,charsys_t* argv[])
 		comment.expanderRegister(STR("table_end"),table_end);
 		comment.expanderRegister(STR("table_header"),table_header);
 		comment.expanderRegister(STR("table_row"),table_row);
+		comment.expanderRegister(STR("term_ref"),term_ref);
+		comment.expanderRegister(STR("term_def"),term_def);
+		comment.expanderRegister(STR("term_list"),term_list);
 		
 		Doxymax::CodeProcessor code;
 		Doxymax::TokenProcessor* processor_current=&code;
