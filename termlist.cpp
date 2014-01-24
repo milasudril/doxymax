@@ -22,6 +22,7 @@ namespace
 					.append(def).append(STR("</td></tr>"));
 				m_buffer.terminate();
 				Doxymax::print(m_buffer);
+				m_buffer.clear();
 				return 1;
 				}
 		private:
