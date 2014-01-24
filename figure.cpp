@@ -42,9 +42,10 @@ void Doxymax::Figure::expand(const Macro& macro,CommentProcessor& processor)
 		++n;
 		processor.labelSet(macro.args[2],n);
 		}
-	str_out.append(STR("/><div class=\"caption\">Figure "))
+	str_out.append(STR("/><div class=\"caption\"><a href=\""))
+		.append(macro.args[0]).append(STR("\">Figure "))
 		.append(Herbs::IntFormat<size_t>(n))
-		.append(STR(": "))
+		.append(STR(":</a> "))
 		.append(macro.args[1])
 		.append(STR("</div></div>"));
 	processor.counterSet(STR("Figure"),n);
