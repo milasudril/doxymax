@@ -77,6 +77,10 @@ This section lists all currently implemented macros. Arguments inside ´[´ and ´]
 ### unquote &mdash; Prints argument
 
 	$unquote(argument)
+
+### old &mdash; Prints a warning about outdated documentation
+
+	$old()
 	
 Notes
 ------------
