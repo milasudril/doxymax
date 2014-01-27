@@ -74,6 +74,10 @@ This section lists all currently implemented macros. Arguments inside ´[´ and ´]
 
 	$term_list()
 	
+### unquote &mdash; Prints argument
+
+	$unquote(argument)
+	
 Notes
 ------------
 

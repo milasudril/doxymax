@@ -16,6 +16,7 @@ target[name[doxymax] type[application]]
 #include "termref.h"
 #include "termdef.h"
 #include "termlist.h"
+#include "unquote.h"
 
 #include <herbs/main/main.h>
 #include <herbs/filein/filein.h>
@@ -49,6 +50,7 @@ int MAIN(int argc,charsys_t* argv[])
 		Doxymax::TermRef term_ref;
 		Doxymax::TermDef term_def;
 		Doxymax::TermList term_list;
+		Doxymax::Unquote unquote;
 		
 		comment.expanderRegister(STR("figure"),figure);
 		comment.expanderRegister(STR("ref"),ref);
@@ -59,6 +61,7 @@ int MAIN(int argc,charsys_t* argv[])
 		comment.expanderRegister(STR("term_ref"),term_ref);
 		comment.expanderRegister(STR("term_def"),term_def);
 		comment.expanderRegister(STR("term_list"),term_list);
+		comment.expanderRegister(STR("unquote"),unquote);
 		
 		Doxymax::CodeProcessor code;
 		Doxymax::TokenProcessor* processor_current=&code;
