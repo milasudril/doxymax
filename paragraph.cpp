@@ -13,7 +13,7 @@ void Doxymax::Paragraph::expand(const Macro& macro,CommentProcessor& processor)
 	if(macro.args.length()<2)
 		{throw Herbs::ExceptionMissing(___FILE__,__LINE__);}
 
-	print(Herbs::format(STR("\\anchor %1 <div class=\"parabox\"><h4>%0</h4><div class=\"parainline\">"),
+	print(Herbs::format(STR("\\anchor %1 \\htmlonly <div class=\"parabox\"><h4>%0</h4><p class=\"parainline\">"),
 		{
 		 macro.args[0].begin()
 		,macro.args[1].begin()
