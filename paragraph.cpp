@@ -13,8 +13,7 @@ void Doxymax::Paragraph::expand(const Macro& macro,CommentProcessor& processor)
 	if(macro.args.length()<2)
 		{throw Herbs::ExceptionMissing(___FILE__,__LINE__);}
 
-	//Is it possible to reference to this?
-	print(Herbs::format(STR("<a name=\"%1\"><h4>%0</h4></a>"),
+	print(Herbs::format(STR("<a name=\"%1\"><h4>%0</h4></a><div class=\"parainline\">"),
 		{
 		 macro.args[0].begin()
 		,macro.args[1].begin()

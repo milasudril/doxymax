@@ -19,6 +19,7 @@ target[name[doxymax] type[application]]
 #include "unquote.h"
 #include "old.h"
 #include "paragraph.h"
+#include "paragraph_end.h"
 
 #include <herbs/main/main.h>
 #include <herbs/filein/filein.h>
@@ -55,6 +56,7 @@ int MAIN(int argc,charsys_t* argv[])
 		Doxymax::Unquote unquote;
 		Doxymax::Old old;
 		Doxymax::Paragraph paragraph;
+		Doxymax::ParagraphEnd paragraph_end;
 		
 		comment.expanderRegister(STR("figure"),figure);
 		comment.expanderRegister(STR("ref"),ref);
@@ -68,6 +70,7 @@ int MAIN(int argc,charsys_t* argv[])
 		comment.expanderRegister(STR("unquote"),unquote);
 		comment.expanderRegister(STR("old"),old);
 		comment.expanderRegister(STR("paragraph"),paragraph);
+		comment.expanderRegister(STR("paragraph_end"),paragraph_end);
 		
 		Doxymax::CodeProcessor code;
 		Doxymax::TokenProcessor* processor_current=&code;
