@@ -9,5 +9,5 @@ target[name[paragraph_end.o] type[object]]
 
 void Doxymax::ParagraphEnd::expand(const Macro& macro,CommentProcessor& processor)
 	{
-	print(Herbs::String(STR("</div>")));
+	print(Herbs::String(STR("</div></div>")));
 	}
