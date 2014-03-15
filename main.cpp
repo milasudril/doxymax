@@ -20,6 +20,7 @@ target[name[doxymax] type[application]]
 #include "old.h"
 #include "paragraph.h"
 #include "paragraph_end.h"
+#include "item.h"
 
 #include <herbs/main/main.h>
 #include <herbs/filein/filein.h>
@@ -57,6 +58,7 @@ int MAIN(int argc,charsys_t* argv[])
 		Doxymax::Old old;
 		Doxymax::Paragraph paragraph;
 		Doxymax::ParagraphEnd paragraph_end;
+		Doxymax::Item item;
 		
 		comment.expanderRegister(STR("figure"),figure);
 		comment.expanderRegister(STR("ref"),ref);
@@ -71,6 +73,7 @@ int MAIN(int argc,charsys_t* argv[])
 		comment.expanderRegister(STR("old"),old);
 		comment.expanderRegister(STR("paragraph"),paragraph);
 		comment.expanderRegister(STR("paragraph_end"),paragraph_end);
+		comment.expanderRegister(STR("item"),item);
 		
 		Doxymax::CodeProcessor code;
 		Doxymax::TokenProcessor* processor_current=&code;
