@@ -3,13 +3,13 @@ target[name[termdef.o] type[object]]
 #endif
 
 #include "termdef.h"
-#include "output.h"
 #include "commentprocessor.h"
+#include "macro.h"
 
 #include <herbs/intformat/intformat.h>
 #include <herbs/exceptionmissing/exceptionmissing.h>
 
-void Doxymax::TermDef::expand(const Macro& macro,CommentProcessor& processor)
+Herbs::String Doxymax::TermDef::expand(const Macro& macro,CommentProcessor& processor)
 	{
 	if(macro.args.length()<3)
 		{throw Herbs::ExceptionMissing(___FILE__,__LINE__);}
@@ -23,5 +23,5 @@ void Doxymax::TermDef::expand(const Macro& macro,CommentProcessor& processor)
 		.append(macro.args[1])
 		.append(STR("</span>"));
 	
-	print(str_out);
+	return std::move(str_out);
 	}

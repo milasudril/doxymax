@@ -3,14 +3,13 @@ target[name[tablebegin.o] type[object]]
 #endif
 
 #include "tablebegin.h"
-#include "output.h"
 #include "macro.h"
 #include "commentprocessor.h"
 
 #include <herbs/intformat/intformat.h>
 #include <herbs/exceptionmissing/exceptionmissing.h>
 
-void Doxymax::TableBegin::expand(const Macro& macro,CommentProcessor& processor)
+Herbs::String Doxymax::TableBegin::expand(const Macro& macro,CommentProcessor& processor)
 	{
 	if(macro.args.length()<2)
 		{throw Herbs::ExceptionMissing(___FILE__,__LINE__);}
@@ -34,5 +33,5 @@ void Doxymax::TableBegin::expand(const Macro& macro,CommentProcessor& processor)
 		.append(STR("</div>"))
 		.append(STR("<table class=\"doxtable\" style=\"margin-left:auto;margin-right:auto;\">"));
 	
-	print(str_out);
+	return std::move(str_out);
 	}

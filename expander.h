@@ -5,6 +5,8 @@ target[name[expander.h] type[include]]
 #ifndef EXPANDER_H
 #define EXPANDER_H
 
+#include <herbs/string/string.h>
+
 namespace Doxymax
 	{
 	class CommentProcessor;
@@ -12,7 +14,7 @@ namespace Doxymax
 	class Expander
 		{
 		public:
-			virtual void expand(const Macro& macro,CommentProcessor& processor)=0;			
+			virtual Herbs::String expand(const Macro& macro,CommentProcessor& processor)=0;			
 		};
 	}
 

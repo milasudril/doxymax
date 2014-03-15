@@ -3,13 +3,12 @@ target[name[tableheader.o] type[object]]
 #endif
 
 #include "tableheader.h"
-#include "output.h"
 #include "macro.h"
 
 #include <herbs/intformat/intformat.h>
 #include <herbs/exceptionmissing/exceptionmissing.h>
 
-void Doxymax::TableHeader::expand(const Macro& macro,CommentProcessor& processor)
+Herbs::String Doxymax::TableHeader::expand(const Macro& macro,CommentProcessor& processor)
 	{
 	Herbs::String str_out(256);
 	str_out.append(STR("<tr>"));
@@ -20,5 +19,5 @@ void Doxymax::TableHeader::expand(const Macro& macro,CommentProcessor& processor
 		++i;
 		}
 	str_out.append(STR("</tr>"));
-	print(str_out);
+	std::move(str_out); 
 	}

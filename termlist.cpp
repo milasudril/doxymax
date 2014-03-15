@@ -3,7 +3,6 @@ target[name[termlist.o] type[object]]
 #endif
 
 #include "termlist.h"
-#include "output.h"
 #include "commentprocessor.h"
 
 #include <herbs/intformat/intformat.h>
@@ -20,9 +19,6 @@ namespace
 				m_buffer.append(STR("<tr><td class=\"termdef\">")).append(term)
 					.append(STR("</td><td>"))
 					.append(def).append(STR("</td></tr>"));
-				m_buffer.terminate();
-				Doxymax::print(m_buffer);
-				m_buffer.clear();
 				return 1;
 				}
 		private:
@@ -30,23 +26,12 @@ namespace
 		};
 	}
 
-void Doxymax::TermList::expand(const Macro& macro,CommentProcessor& processor)
+Herbs::String Doxymax::TermList::expand(const Macro& macro,CommentProcessor& processor)
 	{
 	Herbs::String str_out(128);
-	str_out.append(STR("<table class=\"doxtable\" style=\"margin-left:auto;margin-right:auto;\">"));
-	print(str_out);
-	str_out.clear();
-
-	str_out.append(STR("<tr>"))
-		.append(STR("<th>Term</th></th><th>Definition</th>"))
-		.append(STR("</tr>"));
-	str_out.terminate();
-	print(str_out);
-	str_out.clear();
-	
+	str_out.append(STR("<table class=\"doxtable\" style=\"margin-left:auto;margin-right:auto;\">"
+		"<tr><th>Term</th></th><th>Definition</th></tr>"));
 	TermPrinter printer(str_out);
 	processor.definitionsEnum(printer);
-	
-
-	
+	return std::move(str_out);	
 	}

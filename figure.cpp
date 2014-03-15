@@ -3,7 +3,6 @@ target[name[figure.o] type[object]]
 #endif
 
 #include "figure.h"
-#include "output.h"
 #include "macro.h"
 #include "commentprocessor.h"
 
@@ -11,7 +10,7 @@ target[name[figure.o] type[object]]
 #include <herbs/exceptionmissing/exceptionmissing.h>
 
 
-void Doxymax::Figure::expand(const Macro& macro,CommentProcessor& processor)
+Herbs::String Doxymax::Figure::expand(const Macro& macro,CommentProcessor& processor)
 	{
 	if(macro.args.length()<3)
 		{throw Herbs::ExceptionMissing(___FILE__,__LINE__);}
@@ -50,5 +49,5 @@ void Doxymax::Figure::expand(const Macro& macro,CommentProcessor& processor)
 		.append(STR("</div></div>"));
 	processor.counterSet(STR("Figure"),n);
 	
-	print(str_out);
+	return std::move(str_out);
 	}

@@ -13,7 +13,7 @@ namespace Doxymax
 	class TermList:public Expander
 		{
 		public:
-			void expand(const Macro& macro,CommentProcessor& processor);
+			Herbs::String expand(const Macro& macro,CommentProcessor& processor);
 		};
 	}
 
