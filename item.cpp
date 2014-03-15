@@ -17,11 +17,15 @@ Herbs::String Doxymax::Item::expand(const Macro& macro,CommentProcessor& process
 	Herbs::String str_out(64);
 	
 	str_out.append(STR("<li style=\"position:relative\">")).append(macro.args[0]);
+	if(macro.args.length()>2)
+		{
+		str_out.append(STR("<span class=\"itemcomment\">"))
+			.append(macro.args[2])
+			.append(STR("</span>"));
+		}
 	if(macro.args.length()>1)
 		{
-		str_out.append(STR("<span class=\"itemcomment\">["))
-			.append(macro.args[1])
-			.append(STR("]</span>"));
+		str_out.append(macro.args[1]);
 		}
 	str_out.append(STR("</li>"));
 	return std::move(str_out);
