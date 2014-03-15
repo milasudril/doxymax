@@ -11,7 +11,7 @@ target[name[item.o] type[object]]
 
 Herbs::String Doxymax::Item::expand(const Macro& macro,CommentProcessor& processor)
 	{
-	if(macro.args.length()<2)
+	if(macro.args.length()<1)
 		{throw Herbs::ExceptionMissing(___FILE__,__LINE__);}
 
 	Herbs::String str_out(64);
@@ -19,9 +19,9 @@ Herbs::String Doxymax::Item::expand(const Macro& macro,CommentProcessor& process
 	str_out.append(STR("<li style=\"position:relative\">")).append(macro.args[0]);
 	if(macro.args.length()>1)
 		{
-		str_out.append(STR("<span class=\"itemcomment\">"))
+		str_out.append(STR("<span class=\"itemcomment\">["))
 			.append(macro.args[1])
-			.append(STR("</span>"));
+			.append(STR("]</span>"));
 		}
 	str_out.append(STR("</li>"));
 	return std::move(str_out);

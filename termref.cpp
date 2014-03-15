@@ -4,6 +4,7 @@ target[name[termref.o] type[object]]
 
 #include "termref.h"
 #include "commentprocessor.h"
+#include "macro.h"
 
 #include <herbs/intformat/intformat.h>
 #include <herbs/exceptionmissing/exceptionmissing.h>

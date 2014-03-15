@@ -6,6 +6,7 @@ target[name[commentprocessor.o] type[object]]
 #include "doxytok.h"
 #include "output.h"
 #include "expander.h"
+#include "macro.h"
 
 #include <herbs/exceptionmissing/exceptionmissing.h>
 #include <herbs/filein/filein.h>
@@ -158,11 +159,17 @@ namespace
 		}
 	}
 
-
+	
+struct Doxymax::CommentProcessor::Node
+	{
+	Macro macro;
+	Herbs::String arg_str;
+	};
 	
 Doxymax::CommentProcessor::CommentProcessor(DoxyTok& classifier
 	,const Herbs::String& name_scope):
 	m_classifier(classifier),m_name_scope(escape(name_scope))
+	,node_current(nullptr)
 	{
 	Herbs::Fileutils::touch(Herbs::Path(STR("auxfile.dat")));
 	Herbs::FileIn auxfile(Herbs::Path(STR("auxfile.dat")));
@@ -188,49 +195,67 @@ void Doxymax::CommentProcessor::process(const Herbs::Tokenizer::TokenInfo& info)
 		{
 		if(*info.buffer==CHAR('$'))
 			{
-			macro_current.name=Herbs::String(info.buffer+1);
-			m_classifier.whitespaceEatInc();
-			}
-		else
-			{
-			print(Herbs::String(info.buffer).append(info.delimiter));
-			}
-		return;
+			nodes.push(node_current);
+			node_current=new Node;
+			node_current->macro.name=Herbs::String(info.buffer+1);
+			return;
+			}	
 		}
 		
-	if(macro_current.name.length())
+	if(node_current!=nullptr)
 		{
 		switch(info.tok_class)
 			{
-			case DoxyTok::ARG_BEGIN:
-				throw Herbs::ExceptionMissing(___FILE__,__LINE__);
-				
 			case DoxyTok::ARG_DELIM:
-				macro_current.args.append(quoteKill(Herbs::String(info.buffer)));
+				node_current->arg_str.append(quoteKill(Herbs::String(info.buffer)));
+				node_current->arg_str.terminate();
+				node_current->macro.args.append(node_current->arg_str);
+				node_current->arg_str.clear();
 				return;
 				
 			case DoxyTok::ARG_END:
-				macro_current.args.append(quoteKill(Herbs::String(info.buffer)));
+				{
+				node_current->arg_str.append(quoteKill(Herbs::String(info.buffer)));
+				node_current->arg_str.terminate();
+				node_current->macro.args.append(node_current->arg_str);
+				node_current->arg_str.clear();
+			
+				auto i=expanders.find(node_current->macro.name);
+				Herbs::String ret;
+				if(i!=expanders.end())
 					{
-					auto i=expanders.find(macro_current.name);
-					if(i!=expanders.end())
-						{
-						print(i->second->expand(macro_current,*this));
-						}
-					else
-						{throw Herbs::ExceptionMissing(___FILE__,__LINE__);}
+					ret=i->second->expand(node_current->macro,*this);
 					}
-				macro_current.name.clear();
-				macro_current.args.clear();
-				m_classifier.whitespaceEatDec();
+				else
+					{ret=Herbs::String(STR("[Unknown macro]"));}
+					
+				if(nodes.depth())
+					{
+					delete node_current;
+					node_current=nodes.pop();
+					if(node_current==nullptr)
+						{print(ret);}
+					else
+						{
+						node_current->arg_str.append(ret);
+						}
+					}
+				else
+					{
+					print(Herbs::String(STR("[Unterminated macro]")));
+					}
+				}
 				return;
-	
-			default:
-				throw Herbs::ExceptionMissing(___FILE__,__LINE__);
+			
+			case DoxyTok::SPACE:
+				node_current->arg_str.append(quoteKill(Herbs::String(info.buffer)));
+				return;
 			}
 		}
 	else
-		{print(Herbs::String(info.buffer).append(info.delimiter));}
+		{
+		print(Herbs::String(info.buffer).append(info.delimiter));
+		}
 	}
 
 void Doxymax::CommentProcessor::labelSet(const Herbs::String& label,size_t counter)

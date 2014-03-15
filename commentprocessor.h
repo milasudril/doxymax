@@ -7,7 +7,9 @@ target[name[commentprocessor.h]type[include]]
 #define COMMENTPROCESSOR_H
 
 #include "tokenprocessor.h"
-#include "macro.h"
+
+#include <herbs/string/string.h>
+#include <herbs/stack/stack.h>
 
 #include <map>
 
@@ -15,6 +17,7 @@ namespace Doxymax
 	{
 	class DoxyTok;
 	class Expander;
+	class Macro;
 	
 	class CommentProcessor:public TokenProcessor
 		{
@@ -51,9 +54,9 @@ namespace Doxymax
 			std::map<Herbs::String,size_t> labels;
 			std::map<Herbs::String,Herbs::String> terms;
 			std::map<Herbs::String,Expander*> expanders;
-			
-			
-			Macro macro_current;
+			struct Node;				
+			Herbs::Stack<Node*> nodes;
+			Node* node_current;
 		};
 	}
 
