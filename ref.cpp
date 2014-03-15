@@ -3,14 +3,13 @@ target[name[ref.o] type[object]]
 #endif
 
 #include "ref.h"
-#include "output.h"
 #include "macro.h"
 #include "commentprocessor.h"
 
 #include <herbs/intformat/intformat.h>
 #include <herbs/exceptionmissing/exceptionmissing.h>
 
-void Doxymax::Ref::expand(const Macro& macro,CommentProcessor& processor)
+Herbs::String Doxymax::Ref::expand(const Macro& macro,CommentProcessor& processor)
 	{
 	if(macro.args.length()<1)
 		{throw Herbs::ExceptionMissing(___FILE__,__LINE__);}
@@ -22,5 +21,5 @@ void Doxymax::Ref::expand(const Macro& macro,CommentProcessor& processor)
 		.append(Herbs::IntFormat<size_t>(cval))
 		.append(CHAR('"'));
 	
-	print(str_out);
+	return std::move(str_out);
 	}

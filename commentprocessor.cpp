@@ -214,7 +214,9 @@ void Doxymax::CommentProcessor::process(const Herbs::Tokenizer::TokenInfo& info)
 					{
 					auto i=expanders.find(macro_current.name);
 					if(i!=expanders.end())
-						{i->second->expand(macro_current,*this);}
+						{
+						print(i->second->expand(macro_current,*this));
+						}
 					else
 						{throw Herbs::ExceptionMissing(___FILE__,__LINE__);}
 					}

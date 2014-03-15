@@ -3,14 +3,13 @@ target[name[item.o] type[object]]
 #endif
 
 #include "item.h"
-#include "output.h"
 #include "macro.h"
 #include "commentprocessor.h"
 
 #include <herbs/intformat/intformat.h>
 #include <herbs/exceptionmissing/exceptionmissing.h>
 
-void Doxymax::Item::expand(const Macro& macro,CommentProcessor& processor)
+Herbs::String Doxymax::Item::expand(const Macro& macro,CommentProcessor& processor)
 	{
 	if(macro.args.length()<2)
 		{throw Herbs::ExceptionMissing(___FILE__,__LINE__);}
@@ -25,5 +24,5 @@ void Doxymax::Item::expand(const Macro& macro,CommentProcessor& processor)
 			.append(STR("</span>"));
 		}
 	str_out.append(STR("</li>"));
-	print(str_out);
+	return std::move(str_out);
 	}
