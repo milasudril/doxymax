@@ -32,6 +32,10 @@ namespace Doxymax
 			void counterSet(const char_t* name,size_t value);
 			size_t counterGet(const char_t* name);
 			
+			size_t macroExpansionDepth() const
+				{return nodes.depth();}
+			
+			
 			const Herbs::String* definitionGet(const Herbs::String& term) const;
 			void definitionSet(const Herbs::String& term,const Herbs::String& def);
 			
@@ -45,18 +49,18 @@ namespace Doxymax
 
 			void expanderRegister(const char_t* name,Expander& expander);
 			
+			
 		private:
 			DoxyTok& m_classifier;	
-			
 			Herbs::String m_name_scope;
+			std::map<Herbs::String,Expander*> expanders;			
+			struct Node;				
+			Herbs::Stack<Node*> nodes;
+			Node* node_current;
 			
 			std::map<Herbs::String,size_t> counters;
 			std::map<Herbs::String,size_t> labels;
 			std::map<Herbs::String,Herbs::String> terms;
-			std::map<Herbs::String,Expander*> expanders;
-			struct Node;				
-			Herbs::Stack<Node*> nodes;
-			Node* node_current;
 		};
 	}
 

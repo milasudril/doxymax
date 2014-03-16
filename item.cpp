@@ -16,7 +16,10 @@ Herbs::String Doxymax::Item::expand(const Macro& macro,CommentProcessor& process
 
 	Herbs::String str_out(64);
 	
-	str_out.append(STR("<li style=\"position:relative\">")).append(macro.args[0]);
+	str_out.append(STR("<li"));
+	if(processor.macroExpansionDepth()==1)
+		{str_out.append(STR(" style=\"position:relative\""));}
+	str_out.append(STR(">")).append(macro.args[0]);
 	if(macro.args.length()>2)
 		{
 		str_out.append(STR("<span class=\"itemcomment\">"))
