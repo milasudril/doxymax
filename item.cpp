@@ -19,13 +19,13 @@ Herbs::String Doxymax::Item::expand(const Macro& macro,CommentProcessor& process
 	str_out.append(STR("<li class=\"itemdoxmax\""));
 	if(processor.macroExpansionDepth()==1)
 		{str_out.append(STR(" style=\"position:relative\""));}
-	str_out.append(STR("><span class=\"itemhead\">")).append(macro.args[0])
-		.append(STR("</span>"));
+	str_out.append(STR("><div class=\"itemhead\">")).append(macro.args[0])
+		.append(STR("</div>"));
 	if(macro.args.length()>2)
 		{
-		str_out.append(STR("<span class=\"itemcomment\">"))
+		str_out.append(STR("<div class=\"itemcomment\">"))
 			.append(macro.args[2])
-			.append(STR("</span>"));
+			.append(STR("</div>"));
 		}
 	if(macro.args.length()>1)
 		{
