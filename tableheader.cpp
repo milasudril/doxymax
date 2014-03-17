@@ -19,5 +19,5 @@ Herbs::String Doxymax::TableHeader::expand(const Macro& macro,CommentProcessor& 
 		++i;
 		}
 	str_out.append(STR("</tr>"));
-	std::move(str_out); 
+	return std::move(str_out); 
 	}
