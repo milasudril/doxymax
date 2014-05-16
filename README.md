@@ -9,7 +9,9 @@ Installation
 
 doxymax relies on the Herbs interfaces and the Wand build tool. An implementation of Herbs and Wand can both be obtained from the Gabi project [3]. To install doxymax, run
 
-    wand "flags[install] debugmode[off]"
+    wand profile[install]
+    
+The exact command may vary depending on your personal wand configuration file.
 
 	
 Usage
@@ -36,7 +38,7 @@ To keep track on label numbers, a file called `auxfile.dat` is created. This fil
 
 ### Supported macros
 
-This section lists all currently implemented macros. Arguments inside ´[´ and ´]´ are optional
+This section lists all currently implemented macros. Arguments inside [ and ] are optional
 
 #### figure &mdash; Inserts a figure
 
@@ -85,11 +87,11 @@ This section lists all currently implemented macros. Arguments inside ´[´ and ´]
 Notes
 ------------
 
- * Eventhough the doxymax source is distributed under BSD 2-Clause license, compiling it together with the implementation of Herbs from the Gabi project will bound the compiled module to LGPL version 3 or later.
+ * Eventhough the doxymax source is distributed under BSD 2-Clause license, compiling it together with the implementation of Herbs from the Gabi project will bound the compiled module to GPL version 3 or later.
  
  * If there was an error when running doxymax, Doxygen seems to not report any error output from doxymax. Also Doxygen will keep running despite doxymax returns a non-zero status code. This is an issue in Doxygen rather than doxymax.
  
- * Any file mentioned in a macro will not be copied to the Doxygen output directory. Doing so requiers parsing of the current ´doxyfile´. This should be implemented in a future release.
+ * Any file mentioned in a macro will not be copied to the Doxygen output directory. Doing so requiers parsing of the current doxyfile. This should be implemented in a future release.
 
 
 
