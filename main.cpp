@@ -28,12 +28,12 @@ target[name[doxymax] type[application]]
 #include <herbs/tokenizer/tokenizer.h>
 #include <herbs/textdecoder/textdecoder.h>
 #include <herbs/exception/exception.h>
-#include <herbs/messageprinterstdio/messageprinterstdio.h>
+#include <herbs/logwriterstdout/logwriterstdout.h>
 #include <herbs/stringsys/stringsys.h>
 
 int MAIN(int argc,charsys_t* argv[])
 	{
-	Herbs::MessagePrinterStdio errlog(Herbs::StreamSpec::STDERR);
+	Herbs::LogWriterStdout errlog;
 	try
 		{
 		if(argc<2)

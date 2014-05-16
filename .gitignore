@@ -16,3 +16,5 @@
 # Compiled programs
 *.exe
 
+__wand_targets*
+
